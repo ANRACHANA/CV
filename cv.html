@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Full CV</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="nav-left">
+        <button class="hamburger" id="hamburger-btn" aria-label="Open menu">&#9776;</button>
+        <a href="index.html" class="nav-logo">My Portfolio</a>
+      </div>
+      <div class="nav-center desktop-menu">
+        <a href="index.html">Home</a>
+        <a href="cv.html">My CV</a>
+        <a href="projects.html">Projects</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="nav-right desktop-menu">
+        <button onclick="switchLang('kh')">ខ្មែរ</button>
+        <button onclick="switchLang('en')">EN</button>
+      </div>
+    </nav>
+
+    <div id="sidebar" class="sidebar">
+      <a href="index.html">🏠 Home</a>
+      <a href="cv.html">📄 My CV</a>
+      <a href="projects.html">💼 Projects</a>
+      <a href="contact.html">📬 Contact</a>
+      <div class="sidebar-lang">
+        <button onclick="switchLang('kh')">ខ្មែរ</button>
+        <button onclick="switchLang('en')">EN</button>
+      </div>
+    </div>
+    <div id="overlay" class="overlay"></div>
+  </header>
+
+  <div class="container" id="cv-container">
+    <h1 data-kh="អន រាជនា" data-en="An Rachana"></h1>
+    <p><strong>Email:</strong> <span data-kh="rachana@gmail.com" data-en="rachana@gmail.com"></span></p>
+    <p><strong data-kh="លេខទូរស័ព្ទ" data-en="Phone">លេខទូរស័ព្ទ</strong>: <span data-kh="012 345 678" data-en="+855 12 345 678"></span></p>
+
+    <h2 data-kh="ការសិក្សា" data-en="Education"></h2>
+    <ul>
+      <li data-kh="២០១៨-២០២២: បរិញ្ញាបត្រ IT នៅ ITC" data-en="2018-2022: Bachelor in IT at ITC"></li>
+    </ul>
+
+    <h2 data-kh="បទពិសោធន៍ការងារ" data-en="Work Experience"></h2>
+    <ul>
+      <li data-kh="២០២៣-បច្ចុប្បន្ន: Web Developer នៅ XYZ" data-en="2023–Present: Web Developer at XYZ"></li>
+    </ul>
+
+    <h2 data-kh="ជំនាញ" data-en="Skills"></h2>
+    <ul>
+      <li>HTML, CSS, JavaScript, Python</li>
+    </ul>
+  </div>
+
+  <div class="download-section">
+    <button onclick="downloadPDF()">⬇ បញ្ចេញជា PDF</button>
+  </div>
+
+  <nav class="nav-links center">
+    <a href="index.html">⬅ Back to Home</a>
+  </nav>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Projects</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="nav-left">
+        <button class="hamburger" id="hamburger-btn" aria-label="Open menu">&#9776;</button>
+        <a href="index.html" class="nav-logo">My Portfolio</a>
+      </div>
+      <div class="nav-center desktop-menu">
+        <a href="index.html">Home</a>
+        <a href="cv.html">My CV</a>
+        <a href="projects.html">Projects</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </nav>
+
+    <div id="sidebar" class="sidebar">
+      <a href="index.html">🏠 Home</a>
+      <a href="cv.html">📄 My CV</a>
+      <a href="projects.html">💼 Projects</a>
+      <a href="contact.html">📬 Contact</a>
+      <div class="sidebar-lang">
+        <button onclick="switchLang('kh')">ខ្មែរ</button>
+        <button onclick="switchLang('en')">EN</button>
+      </div>
+    </div>
+    <div id="overlay" class="overlay"></div>
+  </header>
+
+  <div class="container">
+    <h1>My Projects | គម្រោងរបស់ខ្ញុំ</h1>
+    <ul class="projects-list">
+      <li>📱 Telegram Bot Project</li>
+      <li>🌐 Personal CV Website</li>
+      <li>💻 ESP32 Fuel Monitoring System</li>
+    </ul>
+  </div>
+
+  <nav class="nav-links center">
+    <a href="index.html">⬅ Back to Home</a>
+  </nav>
+
+  <script src="script.js"></script>
+</body>
+</html>
