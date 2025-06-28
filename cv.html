@@ -1,27 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="km">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>My Full CV</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Full CV</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- Navbar -->
   <header>
     <nav class="navbar">
       <div class="nav-left">
         <button class="hamburger" id="hamburger-btn" aria-label="Open menu">&#9776;</button>
-        <a href="index.html" class="nav-logo">My Portfolio</a>
+        <a href="#" class="nav-logo">An Rachana</a>
       </div>
-      <div class="nav-center desktop-menu">
+      <div class="desktop-menu">
         <a href="index.html">Home</a>
-        <a href="cv.html">My CV</a>
-        <a href="projects.html">Projects</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <div class="nav-right desktop-menu">
-        <button onclick="switchLang('kh')">ខ្មែរ</button>
-        <button onclick="switchLang('en')">EN</button>
+        <a href="#cv-container">CV</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
       </div>
     </nav>
 
@@ -30,42 +28,57 @@
       <a href="cv.html">📄 My CV</a>
       <a href="projects.html">💼 Projects</a>
       <a href="contact.html">📬 Contact</a>
+
       <div class="sidebar-lang">
         <button onclick="switchLang('kh')">ខ្មែរ</button>
-        <button onclick="switchLang('en')">EN</button>
+        <button onclick="switchLang('en')">English</button>
       </div>
     </div>
+
     <div id="overlay" class="overlay"></div>
   </header>
 
+  <!-- Control Buttons -->
+  <div class="btn">
+    <select id="pdfSelector" onchange="handlePDFSwitch()" class="pdf-select">
+      <option value="">📄 PDF Options</option>
+      <option value="download">⬇️ Download PDF</option>
+      <option value="preview">👁️ Show Preview</option>
+      <option value="print">🖨️ Print CV</option>
+    </select>
+
+    <div class="lang-dropdown">
+      <div class="lang-selected" id="langSelected">
+        <img src="https://flagcdn.com/w40/kh.png" class="flag-icon" alt="KH"> ភាសាខ្មែរ
+      </div>
+      <div class="lang-options" id="langOptions">
+        <div onclick="setLang('kh')"><img src="https://flagcdn.com/w40/kh.png" class="flag-icon" alt="KH"> ភាសាខ្មែរ</div>
+        <div onclick="setLang('en')"><img src="https://flagcdn.com/w40/us.png" class="flag-icon" alt="US"> English</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CV Content -->
   <div class="container" id="cv-container">
-    <h1 data-kh="អន រាជនា" data-en="An Rachana"></h1>
-    <p><strong>Email:</strong> <span data-kh="rachana@gmail.com" data-en="rachana@gmail.com"></span></p>
-    <p><strong data-kh="លេខទូរស័ព្ទ" data-en="Phone">លេខទូរស័ព្ទ</strong>: <span data-kh="012 345 678" data-en="+855 12 345 678"></span></p>
+    <h1 data-kh="អន រាជនា" data-en="An Rachana">អន រាជនា</h1>
+    <p><strong>Email:</strong> <span data-kh="rachana@gmail.com" data-en="rachana@gmail.com">rachana@gmail.com</span></p>
+    <p><strong data-kh="លេខទូរស័ព្ទ" data-en="Phone">លេខទូរស័ព្ទ</strong>: <span data-kh="012 345 678" data-en="+855 12 345 678">012 345 678</span></p>
 
-    <h2 data-kh="ការសិក្សា" data-en="Education"></h2>
+    <h2 data-kh="ការសិក្សា" data-en="Education">ការសិក្សា</h2>
     <ul>
-      <li data-kh="២០១៨-២០២២: បរិញ្ញាបត្រ IT នៅ ITC" data-en="2018-2022: Bachelor in IT at ITC"></li>
+      <li data-kh="២០១៨-២០២២: បរិញ្ញាបត្រ IT នៅ ITC" data-en="2018-2022: Bachelor in IT at ITC">2018-2022: Bachelor in IT at ITC</li>
     </ul>
 
-    <h2 data-kh="បទពិសោធន៍ការងារ" data-en="Work Experience"></h2>
+    <h2 data-kh="បទពិសោធន៍ការងារ" data-en="Work Experience">បទពិសោធន៍ការងារ</h2>
     <ul>
-      <li data-kh="២០២៣-បច្ចុប្បន្ន: Web Developer នៅ XYZ" data-en="2023–Present: Web Developer at XYZ"></li>
+      <li data-kh="២០២៣-បច្ចុប្បន្ន: Web Developer នៅ XYZ" data-en="2023–Present: Web Developer at XYZ">2023–Present: Web Developer at XYZ</li>
     </ul>
 
-    <h2 data-kh="ជំនាញ" data-en="Skills"></h2>
+    <h2 data-kh="ជំនាញ" data-en="Skills">ជំនាញ</h2>
     <ul>
       <li>HTML, CSS, JavaScript, Python</li>
     </ul>
   </div>
-
-  <div class="download-section">
-    <button onclick="downloadPDF()">⬇ បញ្ចេញជា PDF</button>
-  </div>
-
-  <nav class="nav-links center">
-    <a href="index.html">⬅ Back to Home</a>
-  </nav>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="script.js"></script>
