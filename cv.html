@@ -1,86 +1,462 @@
 <!DOCTYPE html>
-<html lang="km">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My Full CV</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CV with Slide Up Mobile Menu</title>
+<style>
+  body {
+    font-family: Arial, "Khmer OS Battambang", sans-serif;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #f7f7f7;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+
+  /* Desktop button panel */
+  .btn {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  .btn button,
+  .btn select {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .btn button:hover {
+    background-color: #0056b3;
+  }
+  .btn select {
+    background-color: white;
+    color: #007bff;
+    border-color: #007bff;
+  }
+  .btn select:hover {
+    border-color: #0056b3;
+  }
+
+  /* Hide desktop buttons on mobile */
+  @media (max-width: 599px) {
+    .btn {
+      display: none;
+    }
+  }
+
+  /* Mobile Menu Button */
+  #menuBtnMobile {
+    display: none;
+    position: fixed;
+    top: 6px;
+    left: 350px;
+    z-index: 1200;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-size: 25px;
+    padding: 5px 10px;
+    border-radius: 1px;
+    cursor: pointer;
+    user-select: none;
+  }
+  #menuBtnMobile:hover {
+    background-color: #0056b3;
+  }
+  @media (max-width: 599px) {
+    #menuBtnMobile {
+      display: block;
+    }
+  }
+
+  /* Slide up menu */
+  #sideMenu {
+    position: fixed;
+    left: 50%;
+    bottom: -350px;
+    transform: translateX(-50%);
+    width: 90vw;
+    max-width: 320px;
+    background: white;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    border-radius: 12px 12px 0 0;
+    padding: 20px;
+    z-index: 1100;
+    transition: bottom 0.4s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  #sideMenu.active {
+    bottom: 50px;
+  }
+
+  /* Close button inside menu */
+  #sideMenu .close-btn {
+    align-self: flex-end;
+    font-size: 28px;
+    font-weight: bold;
+    color: #007bff;
+    cursor: pointer;
+    border: none;
+    background: none;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+  #sideMenu .close-btn:hover {
+    color: #0056b3;
+  }
+
+  /* Buttons inside menu */
+  #sideMenu button,
+  #sideMenu select {
+    margin-bottom: 15px;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 8px;
+    border: 1px solid #007bff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #sideMenu button {
+    background-color: #007bff;
+    color: white;
+  }
+  #sideMenu button:hover {
+    background-color: #0056b3;
+  }
+  #sideMenu select {
+    background-color: white;
+    color: #007bff;
+    border-color: #007bff;
+  }
+  #sideMenu select:hover {
+    border-color: #0056b3;
+  }
+
+  /* Overlay */
+  #overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1050;
+  }
+  #overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* CV Content */
+  #cv-pages {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(1,0,0,0.1);
+  }
+  .container {
+    margin-bottom: 30px;
+    min-height: 250px;
+    page-break-after: always;
+  }
+  .container:last-child {
+    page-break-after: auto;
+  }
+  h1, h2, p, ul {
+    margin: 0 0 10px 0;
+    line-height: 1.5;
+  }
+
+  /* Modal for PDF preview */
+  #modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 1500;
+    justify-content: center;
+    align-items: center;
+  }
+  #modal-content {
+    background: white;
+    width: 80vw;
+    height: 80vh;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #modal-header {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  #modal-header button {
+    background: white;
+    color: #007bff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #modal-body {
+    flex-grow: 1;
+    overflow: hidden;
+  }
+  #modal-body iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+</style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <header>
-    <nav class="navbar">
-      <div class="nav-left">
-        <button class="hamburger" id="hamburger-btn" aria-label="Open menu">&#9776;</button>
-        <a href="#" class="nav-logo">An Rachana</a>
-      </div>
-      <div class="desktop-menu">
-        <a href="index.html">Home</a>
-        <a href="#cv-container">CV</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-      </div>
-    </nav>
-
-    <div id="sidebar" class="sidebar">
-      <a href="index.html">🏠 Home</a>
-      <a href="cv.html">📄 My CV</a>
-      <a href="projects.html">💼 Projects</a>
-      <a href="contact.html">📬 Contact</a>
-
-      <div class="sidebar-lang">
-        <button onclick="switchLang('kh')">ខ្មែរ</button>
-        <button onclick="switchLang('en')">English</button>
-      </div>
-    </div>
-
-    <div id="overlay" class="overlay"></div>
-  </header>
-
-  <!-- Control Buttons -->
+  <!-- Desktop button panel -->
   <div class="btn">
-    <select id="pdfSelector" onchange="handlePDFSwitch()" class="pdf-select">
-      <option value="">📄 PDF Options</option>
-      <option value="download">⬇️ Download PDF</option>
-      <option value="preview">👁️ Show Preview</option>
-      <option value="print">🖨️ Print CV</option>
+    <button onclick="showPDFPreview()">👁️ Show Preview</button>
+    <button onclick="downloadPDF()">⬇️ Download PDF</button>
+    <button onclick="shareOnTelegram()">💬 Share CV on Telegram</button>
+    <select id="lang-select" onchange="changeLanguage()">
+      <option value="km">ខ្មែរ</option>
+      <option value="en" selected>English</option>
     </select>
-
-    <div class="lang-dropdown">
-      <div class="lang-selected" id="langSelected">
-        <img src="https://flagcdn.com/w40/kh.png" class="flag-icon" alt="KH"> ភាសាខ្មែរ
-      </div>
-      <div class="lang-options" id="langOptions">
-        <div onclick="setLang('kh')"><img src="https://flagcdn.com/w40/kh.png" class="flag-icon" alt="KH"> ភាសាខ្មែរ</div>
-        <div onclick="setLang('en')"><img src="https://flagcdn.com/w40/us.png" class="flag-icon" alt="US"> English</div>
-      </div>
-    </div>
   </div>
+
+  <!-- Mobile menu button -->
+  <button id="menuBtnMobile" aria-label="Open Menu" onclick="openMenu()">☰</button>
+
+  <!-- Slide up menu -->
+  <nav id="sideMenu" aria-label="Mobile Menu">
+    <button class="close-btn" aria-label="Close Menu" onclick="closeMenu()">×</button>
+    <button onclick="showPDFPreview()">👁️ Show Preview</button>
+    <button onclick="downloadPDF()">⬇️ Download PDF</button>
+    <button onclick="shareOnTelegram()">💬 Share CV on Telegram</button>
+    <select id="lang-select-mobile" onchange="changeLanguageMobile()">
+      <option value="km">ខ្មែរ</option>
+      <option value="en" selected>English</option>
+    </select>
+  </nav>
+
+  <!-- Overlay -->
+  <div id="overlay" onclick="closeMenu()"></div>
 
   <!-- CV Content -->
-  <div class="container" id="cv-container">
-    <h1 data-kh="អន រាជនា" data-en="An Rachana">អន រាជនា</h1>
-    <p><strong>Email:</strong> <span data-kh="rachana@gmail.com" data-en="rachana@gmail.com">rachana@gmail.com</span></p>
-    <p><strong data-kh="លេខទូរស័ព្ទ" data-en="Phone">លេខទូរស័ព្ទ</strong>: <span data-kh="012 345 678" data-en="+855 12 345 678">012 345 678</span></p>
-
-    <h2 data-kh="ការសិក្សា" data-en="Education">ការសិក្សា</h2>
-    <ul>
-      <li data-kh="២០១៨-២០២២: បរិញ្ញាបត្រ IT នៅ ITC" data-en="2018-2022: Bachelor in IT at ITC">2018-2022: Bachelor in IT at ITC</li>
-    </ul>
-
-    <h2 data-kh="បទពិសោធន៍ការងារ" data-en="Work Experience">បទពិសោធន៍ការងារ</h2>
-    <ul>
-      <li data-kh="២០២៣-បច្ចុប្បន្ន: Web Developer នៅ XYZ" data-en="2023–Present: Web Developer at XYZ">2023–Present: Web Developer at XYZ</li>
-    </ul>
-
-    <h2 data-kh="ជំនាញ" data-en="Skills">ជំនាញ</h2>
-    <ul>
-      <li>HTML, CSS, JavaScript, Python</li>
-    </ul>
+  <div id="cv-pages">
+    <div class="container">
+      <h1 id="name">An Rachana</h1>
+      <p><strong id="email-label">Email:</strong> <span id="email-val">rachana@gmail.com</span></p>
+      <p><strong id="phone-label">Phone:</strong> <span id="phone-val">+855 12 345 678</span></p>
+      <h2 id="education-title">Education</h2>
+      <ul id="education-list">
+        <li>2018-2022: Bachelor in IT at ITC</li>
+      </ul>
+    </div>
+    <div class="container">
+      <h2 id="experience-title">Experience</h2>
+      <ul id="experience-list">
+        <li>2023–Present: Web Developer at XYZ</li>
+      </ul>
+    </div>
+    <div class="container">
+      <h2 id="skills-title">Skills</h2>
+      <ul id="skills-list">
+        <li>HTML, CSS, JavaScript, Python</li>
+      </ul>
+    </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="script.js"></script>
+  <!-- Modal Preview -->
+  <div id="modal">
+    <div id="modal-content">
+      <div id="modal-header">
+        <button id="print-btn">🖨️ Print</button>
+        <button id="close-btn">❌ Close</button>
+      </div>
+      <div id="modal-body">
+        <iframe id="pdf-iframe" src=""></iframe>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  // Texts for languages
+  const texts = {
+    km: {
+      name: "អន រាជនា",
+      email: "អ៊ីម៉ែល",
+      phone: "ទូរស័ព្ទ",
+      educationTitle: "ការសិក្សា",
+      educationList: ["2018-2022: បរិញ្ញាបត្រ IT នៅ ITC"],
+      experienceTitle: "បទពិសោធន៍",
+      experienceList: ["2023–បច្ចុប្បន្ន: អ្នកអភិវឌ្ឍវេបសាយនៅ XYZ"],
+      skillsTitle: "ជំនាញ",
+      skillsList: ["HTML, CSS, JavaScript, Python"],
+    },
+    en: {
+      name: "An Rachana",
+      email: "Email",
+      phone: "Phone",
+      educationTitle: "Education",
+      educationList: ["2018-2022: Bachelor in IT at ITC"],
+      experienceTitle: "Experience",
+      experienceList: ["2023–Present: Web Developer at XYZ"],
+      skillsTitle: "Skills",
+      skillsList: ["HTML, CSS, JavaScript, Python"],
+    }
+  };
+
+  // Sync language between desktop and mobile selects
+  function changeLanguage() {
+    const lang = document.getElementById("lang-select").value;
+    setLanguage(lang);
+    document.getElementById("lang-select-mobile").value = lang;
+  }
+  function changeLanguageMobile() {
+    const lang = document.getElementById("lang-select-mobile").value;
+    setLanguage(lang);
+    document.getElementById("lang-select").value = lang;
+  }
+
+  function setLanguage(lang) {
+    const text = texts[lang];
+    document.getElementById("name").textContent = text.name;
+    document.getElementById("email-label").textContent = text.email + ":";
+    document.getElementById("phone-label").textContent = text.phone + ":";
+    document.getElementById("email-val").textContent = "rachana@gmail.com";
+    document.getElementById("phone-val").textContent = lang === 'km' ? "012 345 678" : "+855 12 345 678";
+    setList("education-list", text.educationList);
+    setList("experience-list", text.experienceList);
+    setList("skills-list", text.skillsList);
+    document.getElementById("education-title").textContent = text.educationTitle;
+    document.getElementById("experience-title").textContent = text.experienceTitle;
+    document.getElementById("skills-title").textContent = text.skillsTitle;
+  }
+  function setList(id, items) {
+    const ul = document.getElementById(id);
+    ul.innerHTML = "";
+    items.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      ul.appendChild(li);
+    });
+  }
+
+  // Menu open/close
+  function openMenu() {
+    document.getElementById("sideMenu").classList.add("active");
+    document.getElementById("overlay").classList.add("active");
+  }
+  function closeMenu() {
+    document.getElementById("sideMenu").classList.remove("active");
+    document.getElementById("overlay").classList.remove("active");
+  }
+
+  // PDF generation with page numbers
+  function addPageNumbers(pdfDoc) {
+    const totalPages = pdfDoc.internal.getNumberOfPages();
+    pdfDoc.setFontSize(10);
+    pdfDoc.setTextColor(150);
+    for (let i = 1; i <= totalPages; i++) {
+      pdfDoc.setPage(i);
+      const pageWidth = pdfDoc.internal.pageSize.getWidth();
+      const pageHeight = pdfDoc.internal.pageSize.getHeight();
+      const text = `Page ${i} / ${totalPages}`;
+      const textWidth = pdfDoc.getStringUnitWidth(text) * pdfDoc.internal.getFontSize() / pdfDoc.internal.scaleFactor;
+      pdfDoc.text(text, pageWidth - 10 - textWidth, pageHeight - 10);
+    }
+  }
+
+  let currentPdfBlobUrl = null;
+
+  function showPDFPreview() {
+    const element = document.getElementById('cv-pages');
+    const opt = {
+      margin: 10,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'] }
+    };
+
+    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+      addPageNumbers(pdf);
+    }).outputPdf('blob').then(function (blob) {
+      if (currentPdfBlobUrl) URL.revokeObjectURL(currentPdfBlobUrl);
+      currentPdfBlobUrl = URL.createObjectURL(blob);
+      document.getElementById('pdf-iframe').src = currentPdfBlobUrl;
+      document.getElementById('modal').style.display = 'flex';
+      closeMenu();
+    });
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    document.getElementById('pdf-iframe').src = '';
+    if (currentPdfBlobUrl) {
+      URL.revokeObjectURL(currentPdfBlobUrl);
+      currentPdfBlobUrl = null;
+    }
+  }
+
+  document.getElementById('close-btn').onclick = closeModal;
+  document.getElementById('print-btn').onclick = () => {
+    const iframe = document.getElementById('pdf-iframe');
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }
+  };
+
+  function downloadPDF() {
+    const element = document.getElementById('cv-pages');
+    const opt = {
+      margin: 10,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'] }
+    };
+
+    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+      addPageNumbers(pdf);
+    }).save("An_Rachana_CV.pdf");
+    closeMenu();
+  }
+
+  function shareOnTelegram() {
+    const publicPdfUrl = "https://anrachana.github.io/CV_link/An_Rachana_CV.pdf";
+    const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(publicPdfUrl)}&text=${encodeURIComponent("📄 Please check my CV: An Rachana")}`;
+    window.open(tgUrl, "_blank");
+    closeMenu();
+  }
+
+  // Initialize language on page load
+  window.onload = () => {
+    document.getElementById("lang-select").value = "en";
+    document.getElementById("lang-select-mobile").value = "en";
+    setLanguage("en");
+  };
+</script>
 </body>
 </html>
