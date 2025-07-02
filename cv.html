@@ -3,50 +3,161 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CV with Slide Up Mobile Menu</title>
+<title>CV with Modern UI/UX + Top Menu</title>
 <style>
+  /* ====== Existing styles ====== */
   body {
     font-family: Arial, "Khmer OS Battambang", sans-serif;
     max-width: 800px;
     margin: 20px auto;
-    background: #f7f7f7;
+    background: #f7f9fc;
     padding: 15px;
     box-sizing: border-box;
+    color: #333;
+
+
+
+
+
+
   }
+  /* Top navbar */
+  header {
+    position: sticky;
+    top: 0;
+    background-color: #357ABD;
+    color: white;
+    z-index: 1500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  .navbar {
+    max-width: 900px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+  }
+  .nav-logo {
+    font-weight: 900;
+    font-size: 1.3rem;
+    color: white;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+  .nav-links a:hover {
+    background-color: #285a8f;
+  }
+  /* Hamburger for mobile */
+  .hamburger {
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: none;
+  }
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+    .hamburger {
+      display: block;
+    }
+  }
+
+  /* Sidebar for mobile menu (left) */
+  #sidebarMenu {
+    position: fixed;
+    top: 0; left: -250px;
+    width: 250px;
+    height: 100vh;
+    background-color: #285a8f;
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: left 0.3s ease;
+    z-index: 1600;
+  }
+  #sidebarMenu.open {
+    left: 0;
+  }
+  #sidebarMenu a {
+    color: white;
+    padding: 15px 25px;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 0 25px 25px 0;
+    transition: background-color 0.3s ease;
+  }
+  #sidebarMenu a:hover {
+    background-color: #285a8f;
+  }
+  #sidebarOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1550;
+  }
+  #sidebarOverlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ====== Rest of your existing styles ====== */
 
   /* Desktop button panel */
   .btn {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 22px;
+    margin-bottom: 20px;
   }
   .btn button,
   .btn select {
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #007bff;
-    background-color: #007bff;
+    padding: 16px 8px;
+    font-size: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #4a90e2, #357ABD);
     color: white;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    box-shadow: 0 6px 15px rgba(53, 122, 189, 0.4);
+    transition: all 0.3s ease;
+    user-select: none;
   }
-  .btn button:hover {
-    background-color: #0056b3;
+  .btn button:hover,
+  .btn select:hover {
+    background: linear-gradient(135deg, #357ABD, #2c5f9e);
+    box-shadow: 0 8px 20px rgba(44, 95, 158, 0.6);
+    transform: translateY(-3px);
   }
   .btn select {
-    background-color: white;
-    color: #007bff;
-    border-color: #007bff;
+    color: #357ABD;
+    background: #f0f6fb;
+    box-shadow: none;
   }
-  .btn select:hover {
-    border-color: #0056b3;
+  .btn select:focus {
+    outline: none;
+    box-shadow: 0 0 6px #357ABD;
   }
-
-  /* Hide desktop buttons on mobile */
   @media (max-width: 599px) {
     .btn {
       display: none;
@@ -57,20 +168,24 @@
   #menuBtnMobile {
     display: none;
     position: fixed;
-    top: 6px;
-    left: 350px;
+    top: 288px;
+    left: 88%;
+    transform: translateX(-50%);
     z-index: 1200;
-    background-color: #007bff;
+    background: #357ABD;
     border: none;
     color: white;
-    font-size: 25px;
-    padding: 5px 10px;
-    border-radius: 1px;
+    font-size: 28px;
+    padding: 6px 14px;
+    border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0 5px 15px rgba(53, 122, 189, 0.6);
     user-select: none;
+    transition: background 0.3s ease, transform 0.3s ease;
   }
   #menuBtnMobile:hover {
-    background-color: #0056b3;
+    background: #285a8f;
+    transform: translateX(-50%) scale(1.1);
   }
   @media (max-width: 599px) {
     #menuBtnMobile {
@@ -82,66 +197,76 @@
   #sideMenu {
     position: fixed;
     left: 50%;
-    bottom: -350px;
+    bottom: -400px;
     transform: translateX(-50%);
     width: 90vw;
-    max-width: 320px;
+    max-width: 350px;
     background: white;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-    border-radius: 12px 12px 0 0;
-    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    border-radius: 18px 18px 0 0;
+    padding: 25px 30px 30px 30px;
     z-index: 1100;
-    transition: bottom 0.4s ease;
+    transition: bottom 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
   }
   #sideMenu.active {
-    bottom: 50px;
+    bottom: 70px;
+    opacity: 1;
+    pointer-events: auto;
   }
 
   /* Close button inside menu */
   #sideMenu .close-btn {
     align-self: flex-end;
-    font-size: 28px;
-    font-weight: bold;
-    color: #007bff;
+    font-size: 32px;
+    font-weight: 900;
+    color: #357ABD;
     cursor: pointer;
     border: none;
     background: none;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     user-select: none;
+    transition: color 0.3s ease;
   }
   #sideMenu .close-btn:hover {
-    color: #0056b3;
+    color: #0696b9 ;
   }
 
   /* Buttons inside menu */
   #sideMenu button,
   #sideMenu select {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
     width: 100%;
-    padding: 12px;
-    font-size: 16px;
+    padding: 14px;
+    font-size: 17px;
     font-weight: 700;
-    border-radius: 8px;
-    border: 1px solid #007bff;
+    border-radius: 12px;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    user-select: none;
   }
   #sideMenu button {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #4a90e2, #357ABD);
     color: white;
+    box-shadow: 0 6px 15px rgba(53, 122, 189, 0.4);
   }
   #sideMenu button:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #357ABD, #2c5f9e);
+    box-shadow: 0 8px 20px rgba(44, 95, 158, 0.6);
+    transform: translateY(-3px);
   }
   #sideMenu select {
-    background-color: white;
-    color: #007bff;
-    border-color: #007bff;
+    background-color: #f0f6fb;
+    color: #357ABD;
+    box-shadow: none;
   }
-  #sideMenu select:hover {
-    border-color: #0056b3;
+  #sideMenu select:focus {
+    outline: none;
+    box-shadow: 0 0 8px #357ABD;
   }
 
   /* Overlay */
@@ -150,10 +275,10 @@
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.55);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.35s ease;
     z-index: 1050;
   }
   #overlay.active {
@@ -164,59 +289,103 @@
   /* CV Content */
   #cv-pages {
     background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(1,0,0,0.1);
+    padding: 30px 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+    transition: box-shadow 0.3s ease;
+  }
+  #cv-pages:hover {
+    box-shadow: 0 6px 28px rgba(0,0,0,0.18);
   }
   .container {
-    margin-bottom: 30px;
-    min-height: 250px;
+    margin-bottom: 60px;
+    min-height: 280px;
     page-break-after: always;
+    scroll-margin-top: 80px;
   }
   .container:last-child {
     page-break-after: auto;
   }
   h1, h2, p, ul {
-    margin: 0 0 10px 0;
-    line-height: 1.5;
+    margin: 0 0 12px 0;
+    line-height: 1.6;
+  }
+  h1 {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #214d8a;
+    letter-spacing: 1.1px;
+  }
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #357ABD;
+    border-bottom: 2px solid #357ABD;
+    padding-bottom: 6px;
+  }
+  ul {
+    padding-left: 20px;
+  }
+  ul li {
+    font-size: 1.1rem;
+    color: #444;
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+  }
+  ul li:hover {
+    color: #357ABD;
   }
 
-  /* Modal for PDF preview */
+  /* Modal Preview */
   #modal {
     display: none;
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0,0,0,0.7);
     z-index: 1500;
     justify-content: center;
     align-items: center;
+    animation: fadeInModal 0.4s ease forwards;
+  }
+  #modal.show {
+    display: flex;
+  }
+  @keyframes fadeInModal {
+    from {opacity: 0;}
+    to {opacity: 1;}
   }
   #modal-content {
     background: white;
-    width: 80vw;
-    height: 80vh;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    width: 85vw;
+    max-width: 900px;
+    height: 85vh;
+    border-radius: 18px;
+    box-shadow: 0 0 22px rgba(0,0,0,0.35);
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
   #modal-header {
-    padding: 10px 15px;
-    background-color: #007bff;
+    padding: 12px 20px;
+    background-color: #357ABD;
     color: white;
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 14px;
   }
   #modal-header button {
     background: white;
-    color: #007bff;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: bold;
+    color: #357ABD;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+  #modal-header button:hover {
+    background-color: #2c5f9e;
+    color: white;
   }
   #modal-body {
     flex-grow: 1;
@@ -226,10 +395,179 @@
     width: 100%;
     height: 100%;
     border: none;
+    border-radius: 0 0 18px 18px;
   }
+
+  /* Smooth scroll for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ .banner-wrapper {
+    position: relative;
+    width: 92vw;
+  
+    max-width: 770px;
+   
+    height: 300px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow:  0  20px 0 3px #2471a3;
+    background: #2471a3 ;
+  }
+
+  .half-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 10px solid #2471a3;
+    box-shadow:  0 20px 20px  #2471a3;
+    opacity: 1;
+    transition: opacity 1s ease;
+  }
+
+  .left-slide {
+    left: -50%;
+  }
+
+  .right-slide {
+    right: -50%;
+  }
+
+  #fullImage {
+    position: absolute;
+    top: 0; left: 0;
+   
+     width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    opacity: 0;
+    transition: opacity 2s ease;
+    z-index: 1;
+  }
+
+  #fullImage.show {
+    opacity: 1;
+  }
+
+  #fullImage.fade-out {
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  .caption {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    font-size: 1.2em;
+    z-index: 20;
+    text-shadow: 0 0 5px #000;
+  }
+
+  @keyframes slideInFromLeft {
+    to {
+      left: 0;
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromRight {
+    to {
+      right: 0;
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .banner-wrapper {
+      height: 180px;
+      border-radius: 5px;
+    }
+    .half-slide {
+      border-width: 3px;
+    }
+    #fullImage {
+      border-radius: 15px;
+    }
+    .caption {
+      font-size: 1em;
+      bottom: 10px;
+      left: 10px;
+    }
+  }
+
+
 </style>
 </head>
 <body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Top Navbar -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <a href="#" class="nav-logo">An Rachana</a>
+      <div class="nav-links">
+        <a href="#cv-pages">CV</a>
+        <a href="#education-title">Education</a>
+        <a href="#experience-title">Experience</a>
+        <a href="#skills-title">Skills</a>
+      </div>
+      <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">☰</button>
+    </nav>
+  </header>
+
+  <!-- Sidebar menu for mobile -->
+  <nav id="sidebarMenu" aria-label="Mobile menu">
+    <a href="#cv-pages" onclick="closeSidebar()">CV</a>
+    <a href="#education-title" onclick="closeSidebar()">Education</a>
+    <a href="#experience-title" onclick="closeSidebar()">Experience</a>
+    <a href="#skills-title" onclick="closeSidebar()">Skills</a>
+  </nav>
+  <div id="sidebarOverlay" onclick="closeSidebar()"></div>
 
   <!-- Desktop button panel -->
   <div class="btn">
@@ -247,7 +585,7 @@
 
   <!-- Slide up menu -->
   <nav id="sideMenu" aria-label="Mobile Menu">
-    <button class="close-btn" aria-label="Close Menu" onclick="closeMenu()">×</button>
+   
     <button onclick="showPDFPreview()">👁️ Show Preview</button>
     <button onclick="downloadPDF()">⬇️ Download PDF</button>
     <button onclick="shareOnTelegram()">💬 Share CV on Telegram</button>
@@ -257,11 +595,37 @@
     </select>
   </nav>
 
+
+
+
+
+
+
+<div class="banner-wrapper">
+  <img id="leftSlide" class="half-slide left-slide" />
+  <img id="rightSlide" class="half-slide right-slide" />
+  <img id="fullImage" />
+  <div class="caption" id="caption"></div>
+</div>
+
+
+
+
+
+
   <!-- Overlay -->
   <div id="overlay" onclick="closeMenu()"></div>
 
   <!-- CV Content -->
   <div id="cv-pages">
+
+
+
+
+
+
+
+
     <div class="container">
       <h1 id="name">An Rachana</h1>
       <p><strong id="email-label">Email:</strong> <span id="email-val">rachana@gmail.com</span></p>
@@ -300,163 +664,291 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
-  // Texts for languages
+  // Toggle sidebar for mobile menu
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebarMenu');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (sidebar.classList.contains('open')) {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    } else {
+      sidebar.classList.add('open');
+      overlay.classList.add('active');
+    }
+  }
+  function closeSidebar() {
+    document.getElementById('sidebarMenu').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+  }
+
+  // Existing language sync functions
   const texts = {
     km: {
       name: "អន រាជនា",
-      email: "អ៊ីម៉ែល",
-      phone: "ទូរស័ព្ទ",
-      educationTitle: "ការសិក្សា",
-      educationList: ["2018-2022: បរិញ្ញាបត្រ IT នៅ ITC"],
+      emailLabel: "អ៊ីមែល៖",
+      phoneLabel: "ទូរស័ព្ទ៖",
+      educationTitle: "ការអប់រំ",
+      educationList: ["២០១៨-២០២២៖ បរិញ្ញាបត្រ IT នៅ ITC"],
       experienceTitle: "បទពិសោធន៍",
-      experienceList: ["2023–បច្ចុប្បន្ន: អ្នកអភិវឌ្ឍវេបសាយនៅ XYZ"],
+      experienceList: ["២០២៣-បច្ចុប្បន្ន៖ អ្នកអភិវឌ្ឍវេបសាយ XYZ"],
       skillsTitle: "ជំនាញ",
       skillsList: ["HTML, CSS, JavaScript, Python"],
+      btnShowPreview: "👁️ បង្ហាញការមើលជាមុន",
+      btnDownloadPDF: "⬇️ ទាញយក PDF",
+      btnShareTelegram: "💬 បង្ហោះទៅ Telegram"
     },
     en: {
       name: "An Rachana",
-      email: "Email",
-      phone: "Phone",
+      emailLabel: "Email:",
+      phoneLabel: "Phone:",
       educationTitle: "Education",
       educationList: ["2018-2022: Bachelor in IT at ITC"],
       experienceTitle: "Experience",
       experienceList: ["2023–Present: Web Developer at XYZ"],
       skillsTitle: "Skills",
       skillsList: ["HTML, CSS, JavaScript, Python"],
+      btnShowPreview: "👁️ Show Preview",
+      btnDownloadPDF: "⬇️ Download PDF",
+      btnShareTelegram: "💬 Share CV on Telegram"
     }
   };
 
-  // Sync language between desktop and mobile selects
   function changeLanguage() {
-    const lang = document.getElementById("lang-select").value;
-    setLanguage(lang);
-    document.getElementById("lang-select-mobile").value = lang;
+    const lang = document.getElementById('lang-select').value;
+    applyLanguage(lang);
+    document.getElementById('lang-select-mobile').value = lang;
   }
   function changeLanguageMobile() {
-    const lang = document.getElementById("lang-select-mobile").value;
-    setLanguage(lang);
-    document.getElementById("lang-select").value = lang;
+    const lang = document.getElementById('lang-select-mobile').value;
+    applyLanguage(lang);
+    document.getElementById('lang-select').value = lang;
   }
-
-  function setLanguage(lang) {
-    const text = texts[lang];
-    document.getElementById("name").textContent = text.name;
-    document.getElementById("email-label").textContent = text.email + ":";
-    document.getElementById("phone-label").textContent = text.phone + ":";
-    document.getElementById("email-val").textContent = "rachana@gmail.com";
-    document.getElementById("phone-val").textContent = lang === 'km' ? "012 345 678" : "+855 12 345 678";
-    setList("education-list", text.educationList);
-    setList("experience-list", text.experienceList);
-    setList("skills-list", text.skillsList);
-    document.getElementById("education-title").textContent = text.educationTitle;
-    document.getElementById("experience-title").textContent = text.experienceTitle;
-    document.getElementById("skills-title").textContent = text.skillsTitle;
-  }
-  function setList(id, items) {
-    const ul = document.getElementById(id);
-    ul.innerHTML = "";
-    items.forEach(item => {
-      const li = document.createElement("li");
+  function applyLanguage(lang) {
+    document.getElementById('name').textContent = texts[lang].name;
+    document.getElementById('email-label').textContent = texts[lang].emailLabel;
+    document.getElementById('phone-label').textContent = texts[lang].phoneLabel;
+    document.getElementById('education-title').textContent = texts[lang].educationTitle;
+    const edList = document.getElementById('education-list');
+    edList.innerHTML = "";
+    texts[lang].educationList.forEach(item => {
+      const li = document.createElement('li');
       li.textContent = item;
-      ul.appendChild(li);
+      edList.appendChild(li);
     });
+    document.getElementById('experience-title').textContent = texts[lang].experienceTitle;
+    const exList = document.getElementById('experience-list');
+    exList.innerHTML = "";
+    texts[lang].experienceList.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      exList.appendChild(li);
+    });
+    document.getElementById('skills-title').textContent = texts[lang].skillsTitle;
+    const skList = document.getElementById('skills-list');
+    skList.innerHTML = "";
+    texts[lang].skillsList.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      skList.appendChild(li);
+    });
+    // Update buttons text
+    document.querySelectorAll('.btn button')[0].textContent = texts[lang].btnShowPreview;
+    document.querySelectorAll('.btn button')[1].textContent = texts[lang].btnDownloadPDF;
+    document.querySelectorAll('.btn button')[2].textContent = texts[lang].btnShareTelegram;
   }
 
-  // Menu open/close
-  function openMenu() {
-    document.getElementById("sideMenu").classList.add("active");
-    document.getElementById("overlay").classList.add("active");
-  }
-  function closeMenu() {
-    document.getElementById("sideMenu").classList.remove("active");
-    document.getElementById("overlay").classList.remove("active");
-  }
-
-  // PDF generation with page numbers
-  function addPageNumbers(pdfDoc) {
-    const totalPages = pdfDoc.internal.getNumberOfPages();
-    pdfDoc.setFontSize(10);
-    pdfDoc.setTextColor(150);
-    for (let i = 1; i <= totalPages; i++) {
-      pdfDoc.setPage(i);
-      const pageWidth = pdfDoc.internal.pageSize.getWidth();
-      const pageHeight = pdfDoc.internal.pageSize.getHeight();
-      const text = `Page ${i} / ${totalPages}`;
-      const textWidth = pdfDoc.getStringUnitWidth(text) * pdfDoc.internal.getFontSize() / pdfDoc.internal.scaleFactor;
-      pdfDoc.text(text, pageWidth - 10 - textWidth, pageHeight - 10);
-    }
-  }
-
-  let currentPdfBlobUrl = null;
+  // PDF Preview modal logic
+  const modal = document.getElementById('modal');
+  const iframe = document.getElementById('pdf-iframe');
+  const printBtn = document.getElementById('print-btn');
+  const closeBtn = document.getElementById('close-btn');
 
   function showPDFPreview() {
+    // Generate PDF then show in iframe
     const element = document.getElementById('cv-pages');
-    const opt = {
-      margin: 10,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] }
-    };
-
-    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
-      addPageNumbers(pdf);
-    }).outputPdf('blob').then(function (blob) {
-      if (currentPdfBlobUrl) URL.revokeObjectURL(currentPdfBlobUrl);
-      currentPdfBlobUrl = URL.createObjectURL(blob);
-      document.getElementById('pdf-iframe').src = currentPdfBlobUrl;
-      document.getElementById('modal').style.display = 'flex';
-      closeMenu();
+    // Add page numbers before generate
+    const containers = element.querySelectorAll('.container');
+    containers.forEach((container, i) => {
+      let pageNum = container.querySelector('.page-num');
+      if (!pageNum) {
+        pageNum = document.createElement('div');
+        pageNum.className = 'page-num';
+        pageNum.style.cssText = "position: absolute; bottom: 10px; right: 10px; color: #999; font-size: 14px;";
+        container.style.position = 'relative';
+        container.appendChild(pageNum);
+      }
+      pageNum.textContent = `Page ${i + 1} / ${containers.length}`;
     });
+    html2pdf()
+      .set({
+        margin: 10,
+        filename: 'An_Rachana_CV.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      })
+      .from(element)
+      .outputPdf('bloburl')
+      .then(url => {
+        iframe.src = url;
+        modal.classList.add('show');
+      });
   }
 
-  function closeModal() {
-    document.getElementById('modal').style.display = 'none';
-    document.getElementById('pdf-iframe').src = '';
-    if (currentPdfBlobUrl) {
-      URL.revokeObjectURL(currentPdfBlobUrl);
-      currentPdfBlobUrl = null;
-    }
-  }
+  closeBtn.addEventListener('click', () => {
+    modal.classList.remove('show');
+    iframe.src = '';
+  });
+  printBtn.addEventListener('click', () => {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  });
 
-  document.getElementById('close-btn').onclick = closeModal;
-  document.getElementById('print-btn').onclick = () => {
-    const iframe = document.getElementById('pdf-iframe');
-    if (iframe && iframe.contentWindow) {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-    }
-  };
-
+  // Download PDF function
   function downloadPDF() {
     const element = document.getElementById('cv-pages');
-    const opt = {
-      margin: 10,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] }
-    };
-
-    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
-      addPageNumbers(pdf);
-    }).save("An_Rachana_CV.pdf");
-    closeMenu();
+    const containers = element.querySelectorAll('.container');
+    containers.forEach((container, i) => {
+      let pageNum = container.querySelector('.page-num');
+      if (!pageNum) {
+        pageNum = document.createElement('div');
+        pageNum.className = 'page-num';
+        pageNum.style.cssText = "position: absolute; bottom: 10px; right: 10px; color: #999; font-size: 14px;";
+        container.style.position = 'relative';
+        container.appendChild(pageNum);
+      }
+      pageNum.textContent = `Page ${i + 1} / ${containers.length}`;
+    });
+    html2pdf()
+      .set({
+        margin: 10,
+        filename: 'An_Rachana_CV.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      })
+      .from(element)
+      .save();
   }
 
+  // Share on Telegram
   function shareOnTelegram() {
-    const publicPdfUrl = "https://anrachana.github.io/CV_link/An_Rachana_CV.pdf";
-    const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(publicPdfUrl)}&text=${encodeURIComponent("📄 Please check my CV: An Rachana")}`;
-    window.open(tgUrl, "_blank");
-    closeMenu();
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent("Check out my CV here:");
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, "_blank");
   }
 
-  // Initialize language on page load
-  window.onload = () => {
-    document.getElementById("lang-select").value = "en";
-    document.getElementById("lang-select-mobile").value = "en";
-    setLanguage("en");
-  };
+  // Mobile Slide up menu (existing code)
+  const menuBtnMobile = document.getElementById('menuBtnMobile');
+  const sideMenu = document.getElementById('sideMenu');
+  const overlay = document.getElementById('overlay');
+
+  function openMenu() {
+    sideMenu.classList.add('active');
+    overlay.classList.add('active');
+  }
+  function closeMenu() {
+    sideMenu.classList.remove('active');
+    overlay.classList.remove('active');
+  }
+
+  // Sync language select mobile & desktop on load
+  document.addEventListener("DOMContentLoaded", () => {
+    const lang = document.getElementById('lang-select').value;
+    applyLanguage(lang);
+  });
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  const images = [
+    'image3.jpg',
+    'image2.jpg',
+    'image3.jpg',
+  ];
+
+  const captions = [
+    'ស្វាគមន៍មកកាន់ស្លាយទី ១',
+    'រូបភាពទី ២ បង្ហាញមាតិកាផ្សេងៗ',
+    'ស្លាយទី ៣ - បញ្ចប់ជាមួយស្ទីលស្អាត'
+  ];
+
+  const leftSlide = document.getElementById('leftSlide');
+  const rightSlide = document.getElementById('rightSlide');
+  const fullImage = document.getElementById('fullImage');
+  const caption = document.getElementById('caption');
+
+  let index = 0;
+
+  function preloadImage(src) {
+    const img = new Image();
+    img.src = src;
+  }
+
+  function animateSlides() {
+    // Preload next image
+    preloadImage(images[(index + 1) % images.length]);
+
+    // Fade out full image if shown
+    fullImage.classList.remove('show');
+    fullImage.classList.add('fade-out');
+
+    // Set split image sources
+    leftSlide.src = images[index];
+    rightSlide.src = images[index];
+    fullImage.src = images[index];
+    caption.textContent = captions[index];
+
+    // Reset positions and animation
+    leftSlide.style.left = '-50%';
+    rightSlide.style.right = '-50%';
+    leftSlide.style.opacity = '0';
+    rightSlide.style.opacity = '0';
+
+    leftSlide.style.animation = 'none';
+    rightSlide.style.animation = 'none';
+    void leftSlide.offsetWidth; // Trigger reflow
+    void rightSlide.offsetWidth;
+
+    // Trigger animations
+    leftSlide.style.animation = 'slideInFromLeft 4s ease forwards';
+    rightSlide.style.animation = 'slideInFromRight 4s ease forwards';
+
+    // Show full image after animation
+    setTimeout(() => {
+      leftSlide.style.opacity = '0';
+      rightSlide.style.opacity = '0';
+      fullImage.classList.remove('fade-out');
+      fullImage.classList.add('show');
+    }, 2200);
+
+    index = (index + 1) % images.length;
+  }
+
+  animateSlides();
+  setInterval(animateSlides, 12000); // every 12s
+</script>
+
+
 </body>
 </html>
