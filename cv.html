@@ -409,6 +409,49 @@
 
 
 
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+#modal.show {
+  display: flex;
+}
+#modal iframe {
+  width: 100%;
+  height: 90vh;
+  border: none;
+  background: white;
+  border-radius: 8px;
+}
+#close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: #f00;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -662,26 +705,36 @@
     </div>
   </div>
 
+
+
+
+
+
+
+<div id="modal">
+  <button id="close-btn">&times;</button>
+  <iframe id="pdf-iframe"></iframe>
+</div>
+
+
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
   // Toggle sidebar for mobile menu
   function toggleSidebar() {
     const sidebar = document.getElementById('sidebarMenu');
     const overlay = document.getElementById('sidebarOverlay');
-    if (sidebar.classList.contains('open')) {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('active');
-    } else {
-      sidebar.classList.add('open');
-      overlay.classList.add('active');
-    }
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
   }
   function closeSidebar() {
     document.getElementById('sidebarMenu').classList.remove('open');
     document.getElementById('sidebarOverlay').classList.remove('active');
   }
 
-  // Existing language sync functions
+  // Language translations
   const texts = {
     km: {
       name: "អន រាជនា",
@@ -718,93 +771,87 @@
     applyLanguage(lang);
     document.getElementById('lang-select-mobile').value = lang;
   }
+
   function changeLanguageMobile() {
     const lang = document.getElementById('lang-select-mobile').value;
     applyLanguage(lang);
     document.getElementById('lang-select').value = lang;
   }
+
   function applyLanguage(lang) {
-    document.getElementById('name').textContent = texts[lang].name;
-    document.getElementById('email-label').textContent = texts[lang].emailLabel;
-    document.getElementById('phone-label').textContent = texts[lang].phoneLabel;
-    document.getElementById('education-title').textContent = texts[lang].educationTitle;
-    const edList = document.getElementById('education-list');
-    edList.innerHTML = "";
-    texts[lang].educationList.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = item;
-      edList.appendChild(li);
-    });
-    document.getElementById('experience-title').textContent = texts[lang].experienceTitle;
-    const exList = document.getElementById('experience-list');
-    exList.innerHTML = "";
-    texts[lang].experienceList.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = item;
-      exList.appendChild(li);
-    });
-    document.getElementById('skills-title').textContent = texts[lang].skillsTitle;
-    const skList = document.getElementById('skills-list');
-    skList.innerHTML = "";
-    texts[lang].skillsList.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = item;
-      skList.appendChild(li);
-    });
-    // Update buttons text
-    document.querySelectorAll('.btn button')[0].textContent = texts[lang].btnShowPreview;
-    document.querySelectorAll('.btn button')[1].textContent = texts[lang].btnDownloadPDF;
-    document.querySelectorAll('.btn button')[2].textContent = texts[lang].btnShareTelegram;
-  }
+    const t = texts[lang];
+    document.getElementById('name').textContent = t.name;
+    document.getElementById('email-label').textContent = t.emailLabel;
+    document.getElementById('phone-label').textContent = t.phoneLabel;
+    document.getElementById('education-title').textContent = t.educationTitle;
+    document.getElementById('experience-title').textContent = t.experienceTitle;
+    document.getElementById('skills-title').textContent = t.skillsTitle;
 
-  // PDF Preview modal logic
-  const modal = document.getElementById('modal');
-  const iframe = document.getElementById('pdf-iframe');
-  const printBtn = document.getElementById('print-btn');
-  const closeBtn = document.getElementById('close-btn');
-
-  function showPDFPreview() {
-    // Generate PDF then show in iframe
-    const element = document.getElementById('cv-pages');
-    // Add page numbers before generate
-    const containers = element.querySelectorAll('.container');
-    containers.forEach((container, i) => {
-      let pageNum = container.querySelector('.page-num');
-      if (!pageNum) {
-        pageNum = document.createElement('div');
-        pageNum.className = 'page-num';
-        pageNum.style.cssText = "position: absolute; bottom: 10px; right: 10px; color: #999; font-size: 14px;";
-        container.style.position = 'relative';
-        container.appendChild(pageNum);
-      }
-      pageNum.textContent = `Page ${i + 1} / ${containers.length}`;
-    });
-    html2pdf()
-      .set({
-        margin: 10,
-        filename: 'An_Rachana_CV.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, letterRendering: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      })
-      .from(element)
-      .outputPdf('bloburl')
-      .then(url => {
-        iframe.src = url;
-        modal.classList.add('show');
+    const updateList = (id, items) => {
+      const ul = document.getElementById(id);
+      ul.innerHTML = "";
+      items.forEach(text => {
+        const li = document.createElement('li');
+        li.textContent = text;
+        ul.appendChild(li);
       });
+    };
+
+    updateList("education-list", t.educationList);
+    updateList("experience-list", t.experienceList);
+    updateList("skills-list", t.skillsList);
+
+    const btns = document.querySelectorAll('.btn button');
+    btns[0].textContent = t.btnShowPreview;
+    btns[1].textContent = t.btnDownloadPDF;
+    btns[2].textContent = t.btnShareTelegram;
   }
 
-  closeBtn.addEventListener('click', () => {
-    modal.classList.remove('show');
-    iframe.src = '';
+function showPDFPreview() {
+  const element = document.getElementById('cv-pages');
+
+  const containers = element.querySelectorAll('.container');
+  containers.forEach((container, i) => {
+    let pageNum = container.querySelector('.page-num');
+    if (!pageNum) {
+      pageNum = document.createElement('div');
+      pageNum.className = 'page-num';
+      pageNum.style.cssText = "position: absolute; bottom: 10px; right: 10px; color: #999; font-size: 14px;";
+      container.style.position = 'relative';
+      container.appendChild(pageNum);
+    }
+    pageNum.textContent = `Page ${i + 1} / ${containers.length}`;
   });
-  printBtn.addEventListener('click', () => {
+
+  html2pdf()
+    .set({
+      margin: 10,
+      filename: 'An_Rachana_CV.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, letterRendering: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    })
+    .from(element)
+    .outputPdf('blob')
+    .then(blob => {
+      const blobURL = URL.createObjectURL(blob);
+      document.getElementById('pdf-iframe').src = blobURL;
+      document.getElementById('modal').classList.add('show');
+    });
+}
+
+
+  document.getElementById('close-btn').addEventListener('click', () => {
+    document.getElementById('modal').classList.remove('show');
+    document.getElementById('pdf-iframe').src = '';
+  });
+
+  document.getElementById('print-btn').addEventListener('click', () => {
+    const iframe = document.getElementById('pdf-iframe');
     iframe.contentWindow.focus();
     iframe.contentWindow.print();
   });
 
-  // Download PDF function
   function downloadPDF() {
     const element = document.getElementById('cv-pages');
     const containers = element.querySelectorAll('.container');
@@ -819,6 +866,7 @@
       }
       pageNum.textContent = `Page ${i + 1} / ${containers.length}`;
     });
+
     html2pdf()
       .set({
         margin: 10,
@@ -831,15 +879,13 @@
       .save();
   }
 
-  // Share on Telegram
   function shareOnTelegram() {
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent("Check out my CV here:");
     window.open(`https://t.me/share/url?url=${url}&text=${text}`, "_blank");
   }
 
-  // Mobile Slide up menu (existing code)
-  const menuBtnMobile = document.getElementById('menuBtnMobile');
+  // Mobile Slide-Up Menu
   const sideMenu = document.getElementById('sideMenu');
   const overlay = document.getElementById('overlay');
 
@@ -847,46 +893,20 @@
     sideMenu.classList.add('active');
     overlay.classList.add('active');
   }
+
   function closeMenu() {
     sideMenu.classList.remove('active');
     overlay.classList.remove('active');
   }
 
-  // Sync language select mobile & desktop on load
+  // Language Sync on Page Load
   document.addEventListener("DOMContentLoaded", () => {
     const lang = document.getElementById('lang-select').value;
     applyLanguage(lang);
   });
-</script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-  const images = [
-    'image3.jpg',
-    'image2.jpg',
-    'image3.jpg',
-  ];
-
+  // Banner Slider
+  const images = ['image3.jpg', 'image2.jpg', 'image3.jpg'];
   const captions = [
     'ស្វាគមន៍មកកាន់ស្លាយទី ១',
     'រូបភាពទី ២ បង្ហាញមាតិកាផ្សេងៗ',
@@ -906,35 +926,25 @@
   }
 
   function animateSlides() {
-    // Preload next image
     preloadImage(images[(index + 1) % images.length]);
-
-    // Fade out full image if shown
     fullImage.classList.remove('show');
     fullImage.classList.add('fade-out');
-
-    // Set split image sources
     leftSlide.src = images[index];
     rightSlide.src = images[index];
     fullImage.src = images[index];
     caption.textContent = captions[index];
 
-    // Reset positions and animation
     leftSlide.style.left = '-50%';
     rightSlide.style.right = '-50%';
     leftSlide.style.opacity = '0';
     rightSlide.style.opacity = '0';
-
     leftSlide.style.animation = 'none';
     rightSlide.style.animation = 'none';
-    void leftSlide.offsetWidth; // Trigger reflow
-    void rightSlide.offsetWidth;
+    void leftSlide.offsetWidth;
 
-    // Trigger animations
     leftSlide.style.animation = 'slideInFromLeft 4s ease forwards';
     rightSlide.style.animation = 'slideInFromRight 4s ease forwards';
 
-    // Show full image after animation
     setTimeout(() => {
       leftSlide.style.opacity = '0';
       rightSlide.style.opacity = '0';
@@ -946,7 +956,7 @@
   }
 
   animateSlides();
-  setInterval(animateSlides, 12000); // every 12s
+  setInterval(animateSlides, 12000);
 </script>
 
 
