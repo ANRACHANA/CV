@@ -678,24 +678,8 @@
 
 
 
-
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
-  // Toggle sidebar for mobile menu
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebarMenu');
-    const overlay = document.getElementById('sidebarOverlay');
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('active');
-  }
-  function closeSidebar() {
-    document.getElementById('sidebarMenu').classList.remove('open');
-    document.getElementById('sidebarOverlay').classList.remove('active');
-  }
-
-  // Language translations
   const texts = {
     km: {
       name: "អន រាជនា",
@@ -707,9 +691,9 @@
       experienceList: ["២០២៣-បច្ចុប្បន្ន៖ អ្នកអភិវឌ្ឍវេបសាយ XYZ"],
       skillsTitle: "ជំនាញ",
       skillsList: ["HTML, CSS, JavaScript, Python"],
-      btnShowPreview: "👁️ បង្ហាញការមើលជាមុន",
+      btnShowPreview: "👁️ មើលជាមុន",
       btnDownloadPDF: "⬇️ ទាញយក PDF",
-      btnShareTelegram: "💬 បង្ហោះទៅ Telegram"
+      btnShareTelegram: "💬 ចែករំលែក Telegram"
     },
     en: {
       name: "An Rachana",
@@ -727,6 +711,43 @@
     }
   };
 
+  // Detect if mobile device
+  function isMobileDevice() {
+    return window.innerWidth <= 768;
+  }
+
+  // Apply language
+  function applyLanguage(lang) {
+    const t = texts[lang];
+    document.getElementById('name').textContent = t.name;
+    document.getElementById('email-label').textContent = t.emailLabel;
+    document.getElementById('phone-label').textContent = t.phoneLabel;
+    document.getElementById('education-title').textContent = t.educationTitle;
+    document.getElementById('experience-title').textContent = t.experienceTitle;
+    document.getElementById('skills-title').textContent = t.skillsTitle;
+
+    const updateList = (id, data) => {
+      const ul = document.getElementById(id);
+      ul.innerHTML = "";
+      data.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+    };
+
+    updateList('education-list', t.educationList);
+    updateList('experience-list', t.experienceList);
+    updateList('skills-list', t.skillsList);
+
+    const btns = document.querySelectorAll('.btn button');
+    if (btns.length >= 3) {
+      btns[0].textContent = t.btnShowPreview;
+      btns[1].textContent = t.btnDownloadPDF;
+      btns[2].textContent = t.btnShareTelegram;
+    }
+  }
+
   function changeLanguage() {
     const lang = document.getElementById('lang-select').value;
     applyLanguage(lang);
@@ -739,175 +760,113 @@
     document.getElementById('lang-select').value = lang;
   }
 
-  function applyLanguage(lang) {
-    const t = texts[lang];
-    document.getElementById('name').textContent = t.name;
-    document.getElementById('email-label').textContent = t.emailLabel;
-    document.getElementById('phone-label').textContent = t.phoneLabel;
-    document.getElementById('education-title').textContent = t.educationTitle;
-    document.getElementById('experience-title').textContent = t.experienceTitle;
-    document.getElementById('skills-title').textContent = t.skillsTitle;
-
-    const updateList = (id, items) => {
-      const ul = document.getElementById(id);
-      ul.innerHTML = "";
-      items.forEach(text => {
-        const li = document.createElement('li');
-        li.textContent = text;
-        ul.appendChild(li);
-      });
-    };
-
-    updateList("education-list", t.educationList);
-    updateList("experience-list", t.experienceList);
-    updateList("skills-list", t.skillsList);
-
-    const btns = document.querySelectorAll('.btn button');
-    btns[0].textContent = t.btnShowPreview;
-    btns[1].textContent = t.btnDownloadPDF;
-    btns[2].textContent = t.btnShareTelegram;
+  // Download PDF
+  function downloadPDF() {
+    const element = document.getElementById('cv-pages');
+    addPageNumbers(element);
+    html2pdf()
+      .set({
+        margin: 10,
+        filename: 'An_Rachana_CV.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      })
+      .from(element)
+      .save();
   }
 
-// Check if device is mobile
-function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-// Show PDF preview
-function showPDFPreview() {
-  const element = document.getElementById('cv-pages');
-
-  // Add page numbers if not exist
-  const containers = element.querySelectorAll('.container');
-  containers.forEach((container, i) => {
-    let pageNum = container.querySelector('.page-num');
-    if (!pageNum) {
-      pageNum = document.createElement('div');
-      pageNum.className = 'page-num';
-      pageNum.style.cssText = "position: absolute; bottom: 10px; right: 10px; color: #999; font-size: 14px;";
-      container.style.position = 'relative';
-      container.appendChild(pageNum);
-    }
-    pageNum.textContent = `Page ${i + 1} / ${containers.length}`;
-  });
-
-  // Generate PDF blob
-  html2pdf()
-    .set({
-      margin: 10,
-      filename: 'An_Rachana_CV.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, letterRendering: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    })
-    .from(element)
-    .outputPdf('blob')
-    .then(blob => {
-      const blobURL = URL.createObjectURL(blob);
-
-      if (isMobileDevice()) {
-        // Mobile: open PDF in new tab (full page)
-        const newTab = window.open();
-        newTab.document.write(`
-          <html>
-            <head>
-              <title>CV Preview - An Rachana</title>
-              <style>
-                html, body { margin: 0; padding: 0; height: 100%; }
-                iframe { border: none; width: 100%; height: 100vh; }
-              </style>
-            </head>
-            <body>
-              <iframe src="${blobURL}"></iframe>
-            </body>
-          </html>
-        `);
-        newTab.document.close();
-      } else {
-        // Desktop: show modal with iframe preview
-        const modal = document.getElementById('modal');
-        const iframe = document.getElementById('pdf-iframe');
-        iframe.src = blobURL;
-        modal.classList.add('show');
+  // Add page number per section
+  function addPageNumbers(parent) {
+    const sections = parent.querySelectorAll('.container');
+    sections.forEach((sec, i) => {
+      let pageNum = sec.querySelector('.page-num');
+      if (!pageNum) {
+        pageNum = document.createElement('div');
+        pageNum.className = 'page-num';
+        pageNum.style.cssText = "position: absolute; bottom: 10px; right: 10px; font-size: 14px; color: #888;";
+        sec.style.position = 'relative';
+        sec.appendChild(pageNum);
       }
+      pageNum.textContent = `Page ${i + 1} / ${sections.length}`;
     });
-}
+  }
 
-// Close modal on desktop
-document.getElementById('close-btn').addEventListener('click', () => {
-  const modal = document.getElementById('modal');
-  const iframe = document.getElementById('pdf-iframe');
-  modal.classList.remove('show');
-  iframe.src = '';
-});
+  // Show preview modal or open in new tab
+  function showPDFPreview() {
+    const element = document.getElementById('cv-pages');
+    addPageNumbers(element);
 
-// Print PDF from modal iframe
-document.getElementById('print-btn').addEventListener('click', () => {
-  const iframe = document.getElementById('pdf-iframe');
-  iframe.contentWindow.focus();
-  iframe.contentWindow.print();
-});
+    html2pdf()
+      .set({
+        margin: 10,
+        filename: 'An_Rachana_CV.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      })
+      .from(element)
+      .outputPdf('bloburl')
+      .then(url => {
+        if (isMobileDevice()) {
+          // Open in new tab for mobile
+          window.open(url, '_blank');
+        } else {
+          // Show preview modal on desktop
+          const modal = document.getElementById('modal');
+          const iframe = document.getElementById('pdf-iframe');
+          iframe.src = url;
+          modal.classList.add('show');
+        }
+      });
+  }
 
-// Download PDF function (same for all devices)
-function downloadPDF() {
-  const element = document.getElementById('cv-pages');
+  // Telegram Share
+  function shareOnTelegram() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent("Check out my CV here:");
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+  }
 
-  // Add page numbers
-  const containers = element.querySelectorAll('.container');
-  containers.forEach((container, i) => {
-    let pageNum = container.querySelector('.page-num');
-    if (!pageNum) {
-      pageNum = document.createElement('div');
-      pageNum.className = 'page-num';
-      pageNum.style.cssText = "position: absolute; bottom: 10px; right: 10px; color: #999; font-size: 14px;";
-      container.style.position = 'relative';
-      container.appendChild(pageNum);
-    }
-    pageNum.textContent = `Page ${i + 1} / ${containers.length}`;
+  // Modal Close
+  document.addEventListener("DOMContentLoaded", () => {
+    applyLanguage(document.getElementById('lang-select').value);
+
+    document.getElementById('close-btn')?.addEventListener('click', () => {
+      document.getElementById('modal').classList.remove('show');
+      document.getElementById('pdf-iframe').src = '';
+    });
+
+    document.getElementById('print-btn')?.addEventListener('click', () => {
+      const iframe = document.getElementById('pdf-iframe');
+      iframe?.contentWindow?.focus();
+      iframe?.contentWindow?.print();
+    });
   });
 
-  html2pdf()
-    .set({
-      margin: 10,
-      filename: 'An_Rachana_CV.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, letterRendering: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    })
-    .from(element)
-    .save();
-}
+  // Sidebar for mobile
+  function toggleSidebar() {
+    document.getElementById('sidebarMenu').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebarMenu').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+  }
 
-// Share CV on Telegram
-function shareOnTelegram() {
-  const url = encodeURIComponent(window.location.href);
-  const text = encodeURIComponent("Check out my CV here:");
-  window.open(`https://t.me/share/url?url=${url}&text=${text}`, "_blank");
-}
-
-// Mobile Slide-up menu controls (optional, from your original)
-const menuBtnMobile = document.getElementById('menuBtnMobile');
-const sideMenu = document.getElementById('sideMenu');
-const overlay = document.getElementById('overlay');
-
-function openMenu() {
-  sideMenu.classList.add('active');
-  overlay.classList.add('active');
-}
-
-function closeMenu() {
-  sideMenu.classList.remove('active');
-  overlay.classList.remove('active');
-}
-
-// Language sync on load (from your original)
-document.addEventListener("DOMContentLoaded", () => {
-  const lang = document.getElementById('lang-select').value;
-  applyLanguage(lang);
-});
+  // Bottom Menu for mobile
+  function openMenu() {
+    document.getElementById('sideMenu').classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+  }
+  function closeMenu() {
+    document.getElementById('sideMenu').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  }
+</script>
 
 
-
+<script>
 
 
 
